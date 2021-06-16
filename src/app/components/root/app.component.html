@@ -1,7 +1,7 @@
 <app-head-bar
   class="navbar navbar-expand-lg navbar-light bg-light"
   [Titulo]="title"
-  (TituloChange)="onTitleChanged($event)"
+  (searchTermChanged)="filterProducts($event)"
 ></app-head-bar>
 <div class="d-flex">
   <app-sidebar [menu]="categorias"></app-sidebar>

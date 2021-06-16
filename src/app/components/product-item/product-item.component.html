@@ -13,9 +13,7 @@
       <div *ngSwitchDefault>Quedan {{item.stock}} en stock</div>
     </div>
   </li>
-  <li class="list-group-item" [ngStyle]="{'font-size': item.price + '%'}" [class.active]="item.price >= 100" [ngClass]="{
-    'list-group-item-success': item.price >= 100
-  }">
+  <li class="list-group-item">
     <b>Precio: </b> {{item.price | currency : 'EUR'}}
   </li>
 </ul>

@@ -9,12 +9,12 @@ export class HeadBarComponent implements OnInit {
 
   @Input() Titulo = 'titulo';
 
-  @Output() TituloChange = new EventEmitter<string>();
+  @Output() searchTermChanged = new EventEmitter<string>();
 
   constructor() { }
 
-  public pulsarBoton(titulo: string = 'titulo') {
-    this.TituloChange.emit(titulo);
+  public onSubmit(searchTerm: string = '') {
+    this.searchTermChanged.emit(searchTerm);
     return false;
   }
 
