@@ -1,0 +1,9 @@
+<app-head-bar
+  class="navbar navbar-expand-lg navbar-light bg-light"
+  [Titulo]="title"
+  (TituloChange)="onTitleChanged($event)"
+></app-head-bar>
+<div class="d-flex">
+  <aside><app-sidebar [menu]="menu"></app-sidebar></aside>
+  <main class="flex-grow-1 bg-info container-fluid">soy el contenido</main>
+</div>
