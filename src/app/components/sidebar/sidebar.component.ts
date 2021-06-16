@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 })
 export class SidebarComponent implements OnInit {
 
-  @Input() public menu: any;
+  @Input() public menu: string[] = [];
 
   constructor() { }
 
