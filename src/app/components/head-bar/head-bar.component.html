@@ -43,14 +43,16 @@
         >
       </li>
     </ul>
-    <form class="d-flex" (submit)="onSubmit(searchInput.value)">
+    <form class="d-flex" (submit)="onSubmit()" [formGroup]="form">
       <input
         #searchInput
-        class="form-control me-2"
+        class="form-control mb-2"
         type="search"
         placeholder="Search"
         aria-label="Search"
-        [value]="Titulo"
+        name="search"
+        formControlName="search"
+        [ngClass]="{ 'is-invalid': submitted && form.get('search')?.invalid, 'is-valid': submitted && form.get('search')?.valid }"
       />
       <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
