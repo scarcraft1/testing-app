@@ -1,3 +1,9 @@
 <ul role="menu" class="rojo">
-  <li [ngClass]="{'active': selectedCategories.indexOf(item) >= 0 }" *ngFor="let item of menu" (click)="categorySelected = item">{{item}}</li>
+  <li
+    [ngClass]="{ active: selectedCategories.indexOf(item) >= 0 }"
+    *ngFor="let item of menu"
+    (click)="categorySelected = item"
+  >
+    {{ item }}
+  </li>
 </ul>

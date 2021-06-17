@@ -18,6 +18,10 @@ export class AppComponent implements OnInit {
     this.productos = this.productService.searchProductsByName(searchTerm);
   }
 
+  public filterProductsByCategories(categories: string[] = []) {
+    this.productos = this.productService.searchProductsByCategories(categories);
+  }
+
   ngOnInit(): void {
     this.productos = this.productService.loadProducts();
   }

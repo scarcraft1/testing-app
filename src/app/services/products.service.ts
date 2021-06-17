@@ -12,8 +12,17 @@ export class ProductsService {
     return this.productList;
   }
 
-  public searchProductsByName(searchTerm = '', ignoreCase = true) {
+  public searchProductsByName(searchTerm = '', ignoreCase = true): ProductItem[] {
     const re = new RegExp(searchTerm, ignoreCase ? 'i' : '');
-    return this.productList.filter(i => re.test(i.name));
+    return this.productList.filter((i) => re.test(i.name));
+  }
+
+  public searchProductsByCategories(categories: string[] = []): ProductItem[] {
+    if (!categories.length) {
+      return this.productList;
+    }
+    return this.productList.filter((product) =>
+      categories.some((category) => product.category === category)
+    );
   }
 }
