@@ -1,4 +1,4 @@
-<ul role="menu" class="rojo">
+<ul role="menu" class="rojo" #list>
   <li
     [ngClass]="{ active: selectedCategories.indexOf(item) >= 0 }"
     *ngFor="let item of menu"

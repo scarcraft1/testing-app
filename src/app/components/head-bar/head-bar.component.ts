@@ -13,6 +13,10 @@ export class HeadBarComponent implements OnInit {
 
   @Output() searchTermChanged = new EventEmitter<string>();
 
+  public get f() {
+    return this.form.controls;
+  }
+
   public form!: FormGroup;
 
   constructor(private fb: FormBuilder) { }

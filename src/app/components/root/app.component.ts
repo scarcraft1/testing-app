@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductItem } from 'src/app/models';
 import { ProductsService } from 'src/app/services/products.service';
 
@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
   public categorias = ['almacenamiento', 'baterias', 'periféricos'];
   public productos: ProductItem[] = [];
 
-  constructor(private productService: ProductsService) { }
+  constructor(private productService: ProductsService) {}
 
   public filterProducts(searchTerm = '') {
     this.productos = this.productService.searchProductsByName(searchTerm);

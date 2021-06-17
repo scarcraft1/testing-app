@@ -4,12 +4,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent, HeadBarComponent, SidebarComponent } from './components';
 import { ProductItemComponent } from './components/product-item/product-item.component';
+import { IsInvalidDirective } from './directives/is-invalid.directive';
 @NgModule({
   declarations: [
     AppComponent,
     HeadBarComponent,
     SidebarComponent,
-    ProductItemComponent
+    ProductItemComponent,
+    IsInvalidDirective
   ],
   imports: [
     BrowserModule,
