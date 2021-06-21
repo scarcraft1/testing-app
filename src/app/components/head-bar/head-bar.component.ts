@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-head-bar',
@@ -20,6 +20,12 @@ export class HeadBarComponent implements OnInit {
   public form!: FormGroup;
 
   constructor(private fb: FormBuilder) { }
+
+  public isValid(control: AbstractControl) {
+    console.log('paso');
+    if (!this.submitted) { return ''; }
+    return control.valid ? 'is-valid' : 'is-invalid';
+  }
 
   public onSubmit(): false {
     this.submitted = true;

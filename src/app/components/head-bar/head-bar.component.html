@@ -51,9 +51,10 @@
         placeholder="Search"
         aria-label="Search"
         name="search"
-        [app-is-invalid]="f.search"
+        [ngClass]="f.search | isValid : submitted"
         formControlName="search"
       />
+      {{ isValid(f.search) }}
       <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
   </div>

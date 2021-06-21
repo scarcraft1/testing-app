@@ -20,25 +20,16 @@ export class IsInvalidDirective implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    this.el.nativeElement.onchange = () => {
-      if (this.el.nativeElement.value.length > 5) {
-        this.el.nativeElement.classList.add('is-invalid');
-        this.el.nativeElement.classList.remove('is-valid');
-      } else {
-        this.el.nativeElement.classList.add('is-valid');
-        this.el.nativeElement.classList.remove('is-invalid');
-      }
-    };
-    // this.control.valueChanges
-    //   .pipe(filter(() => this.control.dirty))
-    //   .subscribe(() => {
-    //     if (this.control.invalid) {
-    //       this.renderer.removeClass(this.el.nativeElement, 'is-valid');
-    //       this.renderer.addClass(this.el.nativeElement, 'is-invalid');
-    //     } else {
-    //       this.renderer.removeClass(this.el.nativeElement, 'is-invalid');
-    //       this.renderer.addClass(this.el.nativeElement, 'is-valid');
-    //     }
-    //   });
+    this.control.valueChanges
+      .pipe(filter(() => this.control.dirty))
+      .subscribe(() => {
+        if (this.control.invalid) {
+          this.renderer.removeClass(this.el.nativeElement, 'is-valid');
+          this.renderer.addClass(this.el.nativeElement, 'is-invalid');
+        } else {
+          this.renderer.removeClass(this.el.nativeElement, 'is-invalid');
+          this.renderer.addClass(this.el.nativeElement, 'is-valid');
+        }
+      });
   }
 }

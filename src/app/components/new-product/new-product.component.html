@@ -1,0 +1,35 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="name">Nombre</label>
+    <input class="form-control" type="text" id="name" formControlName="name">
+  </div>
+  <div class="form-group">
+    <label for="category">Categoría</label>
+    <input class="form-control" type="text" id="category" formControlName="category" [ngClass]="{'is-invalid' : submitted && form.get('category')?.invalid }">
+    <div class="invalid-feedback">
+      {{form.get('category')?.errors | json }}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="price">Precio</label>
+    <input class="form-control" type="number" id="price" formControlName="price" [ngClass]="{'is-invalid' : submitted && form.get('price')?.invalid }" >
+    <div class="invalid-feedback" *ngIf="form.get('price')?.errors as errors">
+      <div *ngIf="errors.required">
+        Debe introducir un precio
+      </div>
+      <div *ngIf="errors.min as error">
+        Valor incorrecto. El valor mínimo es de {{error.min | currency: 'EUR'}}
+      </div>
+      <div *ngIf="errors.max as error">
+        Valor incorrecto. El valor máximo es de {{error.max | currency: 'EUR'}}
+      </div>
+      {{errors | json}}
+    </div>
+  </div>
+  <p *ngIf="form.invalid && submitted" class="alert alert-danger">
+    {{form.errors | json}}
+  </p>
+  <button type="submit" class="btn btn-primary">
+    Guardar
+  </button>
+</form>
