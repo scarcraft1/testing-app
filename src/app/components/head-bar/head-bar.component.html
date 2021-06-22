@@ -51,7 +51,7 @@
         placeholder="Search"
         aria-label="Search"
         name="search"
-        [ngClass]="f.search | isValid : submitted"
+        [ngClass]="{'is-invalid' : submitted && f.search.invalid }"
         formControlName="search"
       />
       {{ isValid(f.search) }}

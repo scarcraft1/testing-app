@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "buildAndPublish": "ng build --prod --base-href /angular/ && scp /dist/prod/* \\server\route",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

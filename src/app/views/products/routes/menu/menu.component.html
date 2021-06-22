@@ -1,0 +1,9 @@
+<div class="d-flex">
+  <nav class="nav flex-column flex-shrink-0 nav-pills">
+    <a [routerLink]="['featured-products']" routerLinkActive="active" class="nav-link">Featured Products</a>
+    <a [routerLink]="['new-product']" routerLinkActive="active" class="nav-link">New Product</a>
+  </nav>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

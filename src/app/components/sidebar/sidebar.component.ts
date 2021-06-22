@@ -16,7 +16,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent implements OnInit {
-  @Input() public menu: string[] = [];
+  @Input() public menu: string[] = ['hola', 'como', 'estas'];
   @Output() public categoriesSelectedChange = new EventEmitter<string[]>();
   public selectedCategories: string[] = [];
 

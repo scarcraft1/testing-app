@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { NewProductCommand } from 'src/app/models';
-import { ProductsService } from 'src/app/services/products.service';
-import { AsyncValidCategoryValidator, CategoriaAlmacenamientoValidator, RamPriceValidator } from 'src/app/validators';
+import { NewProductCommand } from '../../models';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-new-product',
@@ -35,16 +34,9 @@ export class NewProductComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      category: ['', Validators.required, AsyncValidCategoryValidator(this.service)],
-      price: [null, [RamPriceValidator('')]]
+      category: ['', Validators.required],
+      price: [null, [Validators.min(0)]]
     });
-    this.form.setValidators(CategoriaAlmacenamientoValidator);
-
-    this.subscriptions.push(this.form.controls['category'].valueChanges
-    .subscribe(value => {
-      this.form.get('price')?.setValidators(RamPriceValidator(value));
-      this.form.get('price')?.updateValueAndValidity();
-    }));
   }
 
   ngOnDestroy() {

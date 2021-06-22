@@ -1,4 +1,5 @@
-import { ProductItem } from "../models";
+import { ProductItem } from "../views/products/models";
+
 
 const Products: ProductItem[] = [
   {
