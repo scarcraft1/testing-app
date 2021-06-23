@@ -6,6 +6,7 @@ import { ProductsRoutingModule } from './products-routing.module';
 import { FeaturedProductsComponent } from './routes';
 import { MenuComponent } from './routes/menu/menu.component';
 import { P404Component } from './routes/p404/p404.component';
+import { NewCommentComponent } from './routes/new-comment/new-comment.component';
 
 
 
@@ -15,10 +16,12 @@ import { P404Component } from './routes/p404/p404.component';
     ProductItemComponent,
     FeaturedProductsComponent,
     MenuComponent,
-    P404Component
+    P404Component,
+    NewCommentComponent
   ],
   imports: [
-    CoreModule, ProductsRoutingModule
+    CoreModule,
+    ProductsRoutingModule
   ],
   exports: [
     NewProductComponent,

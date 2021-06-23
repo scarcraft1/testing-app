@@ -1,0 +1,11 @@
+<h1>{{titulo}}</h1>
+<app-product-item [item]="item" *ngIf="item">
+  <div class="card-footer">
+    <button type="button" class="btn btn-primary" *ngIf="!isDeveloper" (click)="onVolverClick()">
+      Volver
+    </button>
+    <button type="button" class="btn btn-danger" [disabled]="!isAdmin">
+      Borrar
+    </button>
+  </div>
+</app-product-item>

@@ -22,14 +22,12 @@ export class HeadBarComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   public isValid(control: AbstractControl) {
-    console.log('paso');
     if (!this.submitted) { return ''; }
     return control.valid ? 'is-valid' : 'is-invalid';
   }
 
   public onSubmit(): false {
     this.submitted = true;
-    console.log(this.form.value);
     if (this.form.invalid) { return false; }
 
     // this.form.value
