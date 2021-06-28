@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NewProductCommand } from '../../models';
 import { ProductsService } from '../../services/products.service';
@@ -13,8 +13,8 @@ import { ProductsService } from '../../services/products.service';
 export class NewProductComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
-  public get review(): FormGroup {
-    return this.form.controls['review'] as FormGroup;
+  public get reviews() {
+    return this.form.controls['reviews'] as FormArray;
   }
 
   public command: NewProductCommand = {
@@ -29,19 +29,20 @@ export class NewProductComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.submitted = true;
+    console.log(this.form.value);
+    console.log(this.form.controls['reviews'].valid);
     if (this.form.valid) {
-      console.log(this.form.value);
-      console.log(this.form.controls['review'].valid);
-      // this.submitted = false;
-      // this.form.reset({
-      //   name: '',
-      //   category: '',
-      //   price: null,
-      //   review: {
-      //     rating: 1,
-      //     comment: 'Esto es un comentario nuevo'
-      //   }
-      // });
+      this.submitted = false;
+      this.form.reset({
+        name: '',
+        category: '',
+        price: null,
+        reviews: []
+      });
+      this.reviews.insert(this.reviews.length, this.fb.control({
+        rating: 1,
+        comment: 'Esto es un comentario nuevo'
+      }));
     }
   }
 
@@ -50,10 +51,10 @@ export class NewProductComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       category: ['', Validators.required],
       price: [null, [Validators.min(0)]],
-      review: [{
-        rating: 1,
+      reviews: this.fb.array([{
+        rating: 4,
         comment: 'Esto es un comentario nuevo'
-      }]
+      }])
     });
     // this.form.controls['review'].disable();
     // this.form.setValidators((control: AbstractControl) => {

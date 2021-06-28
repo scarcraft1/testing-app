@@ -29,7 +29,9 @@
   <p *ngIf="form.invalid && submitted" class="alert alert-danger">
     {{form.errors | json}}
   </p>
-  <app-review class="form-group mb-2" formControlName="review" [submitted]="submitted"></app-review>
+  <ng-container *ngFor="let review of reviews.controls; let i = index" formArrayName="reviews">
+    <app-review class="form-group mb-2" [formControlName]="i" form [submitted]="submitted"></app-review>
+  </ng-container>
   <button type="submit" class="btn btn-primary">
     Guardar
   </button>

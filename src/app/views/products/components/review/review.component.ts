@@ -4,7 +4,7 @@ import {
   FormBuilder,
   FormGroup,
   NG_VALUE_ACCESSOR,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
@@ -33,7 +33,7 @@ export class ReviewComponent
   private onTouch = (val?: any) => {};
 
   @Input()
-  public submitted = true;
+  public submitted = false;
 
   constructor(private fb: FormBuilder) {}
 
