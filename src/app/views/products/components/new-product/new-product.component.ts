@@ -31,7 +31,17 @@ export class NewProductComponent implements OnInit, OnDestroy {
     this.submitted = true;
     if (this.form.valid) {
       console.log(this.form.value);
-      this.form.reset();
+      console.log(this.form.controls['review'].valid);
+      // this.submitted = false;
+      // this.form.reset({
+      //   name: '',
+      //   category: '',
+      //   price: null,
+      //   review: {
+      //     rating: 1,
+      //     comment: 'Esto es un comentario nuevo'
+      //   }
+      // });
     }
   }
 
@@ -40,17 +50,18 @@ export class NewProductComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       category: ['', Validators.required],
       price: [null, [Validators.min(0)]],
-      review: this.fb.group({
-        rating: [null, [Validators.required, Validators.min(1)]],
-        comment: ['', Validators.maxLength(500)]
-      })
+      review: [{
+        rating: 1,
+        comment: 'Esto es un comentario nuevo'
+      }]
     });
-    this.form.setValidators((control: AbstractControl) => {
-      if (control.value.review.rating < 4) {
-        return { 'rating': 'la valoracion tiene que ser 4 o más'}
-      }
-      return null;
-    })
+    // this.form.controls['review'].disable();
+    // this.form.setValidators((control: AbstractControl) => {
+    //   if (control.value.review.rating < 4) {
+    //     return { 'rating': 'la valoracion tiene que ser 4 o más'}
+    //   }
+    //   return null;
+    // })
   }
 
   ngOnDestroy() {

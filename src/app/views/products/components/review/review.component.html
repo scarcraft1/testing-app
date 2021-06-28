@@ -1,20 +1,38 @@
 <ng-container [formGroup]="form">
-<div class="form-group mb-2">
-  <label for="rating">Valoración: </label>
-  <select name="rating" id="rating" class="form-select" formControlName="rating" [ngClass]="{'is-invalid' : submitted && form.controls['rating'].invalid}">
-    <option [ngValue]="null" selected disabled>Selecciona la valoración</option>
-    <option [ngValue]="1">1</option>
-    <option [ngValue]="2">2</option>
-    <option [ngValue]="3">3</option>
-    <option [ngValue]="4">4</option>
-    <option [ngValue]="5">5</option>
-  </select>
-  <div class="invalid-feedback" *ngIf="submitted && form.controls['rating'].invalid">
-
+  <div class="form-group mb-2">
+    <label for="rating">Valoración: </label>
+    <select
+      name="rating"
+      id="rating"
+      class="form-select"
+      formControlName="rating"
+      [ngClass]="{ 'is-invalid': form.controls['rating'].invalid }"
+    >
+      <option [ngValue]="null" selected disabled>
+        Selecciona la valoración
+      </option>
+      <option [ngValue]="1">1</option>
+      <option [ngValue]="2">2</option>
+      <option [ngValue]="3">3</option>
+      <option [ngValue]="4">4</option>
+      <option [ngValue]="5">5</option>
+    </select>
+    <div class="invalid-feedback" *ngIf="form.controls['rating'].invalid">
+      {{ form.controls["rating"].errors | json }}
+    </div>
   </div>
-</div>
-<div class="form-group mb-2">
-  <label for="comment">Comentarios:</label>
-  <textarea name="comment" class="form-control" placeholder="Escribe tu opinión" formControlName="comment"></textarea>
-</div>
+  <div class="form-group mb-2">
+    <label for="comment">Comentarios:</label>
+    <textarea
+      name="comment"
+      class="form-control"
+      placeholder="Escribe tu opinión"
+      formControlName="comment"
+      [ngClass]="{ 'is-invalid': form.controls['comment'].invalid }"
+    ></textarea>
+    <div class="invalid-feedback" *ngIf="form.controls['comment'].invalid">
+      {{ form.valid ? "form-valid" : "form-invalid" }}
+      {{ form.controls["comment"].errors | json }}
+    </div>
+  </div>
 </ng-container>
