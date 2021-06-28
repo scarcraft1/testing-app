@@ -1,5 +1,6 @@
 <div class="row">
-  <div class="col-4 mb-3" *ngFor="let item of productos">
+  <div class="col-12 lead mb-3">FEATURED PRODUCTS</div>
+  <div class="col-4 mb-3" *ngFor="let item of products$ | async">
     <app-product-item class="card" [item]="item">
       <div class="card-footer">
         <button

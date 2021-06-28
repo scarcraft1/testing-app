@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { ProductItem } from '../models';
 import { ProductsService } from './products.service';
 
 @Injectable({ providedIn: 'root' })
-export class ProductResolverService implements Resolve<ProductItem> {
+export class ProductResolverService implements Resolve<ProductItem | undefined> {
 
   constructor(private service: ProductsService, private router: Router) { }
-  resolve(route: ActivatedRouteSnapshot): Observable<ProductItem> | Promise<ProductItem> | ProductItem {
-    const routeItem = this.service.loadProducts().find(i => i.id === Number(route.paramMap.get('id')));
-    if (routeItem) {
-      return routeItem;
-    }
-    this.router.navigateByUrl('/products/all-products');
-    return of(null as unknown as ProductItem);
+
+  resolve(route: ActivatedRouteSnapshot): Observable<ProductItem | undefined> | Promise<ProductItem | undefined> | ProductItem | undefined {
+    return this.service.loadProducts()
+      .pipe(
+        map(productList => productList.find(i => i.id === Number(route.paramMap.get('id')))),
+        tap(product => {
+          if (!product) {
+            this.router.navigateByUrl('/products/all-products/featured-products');
+          }
+        })
+      );
   }
 }

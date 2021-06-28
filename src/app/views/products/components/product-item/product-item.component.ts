@@ -1,6 +1,4 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Input,
   OnDestroy,
@@ -8,7 +6,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { ProductItem } from '../../models';
 import { ProductsService } from '../../services';
 
@@ -16,8 +14,6 @@ import { ProductsService } from '../../services';
   selector: 'app-product-item',
   templateUrl: './product-item.component.html',
   styleUrls: ['./product-item.component.scss'],
-  // con este tipo de estrategia, los valores no se cambian si los actualizamos en el subscription del router
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductItemComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
@@ -28,7 +24,6 @@ export class ProductItemComponent implements OnInit, OnDestroy {
   constructor(
     private service: ProductsService,
     private route: ActivatedRoute,
-    private cd: ChangeDetectorRef, // El servicio de angular que permite actualizar el componente
     private router: Router,
   ) {}
 
@@ -39,25 +34,24 @@ export class ProductItemComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.route.paramMap
         .pipe(
+          tap(params => console.log(params.get('id'), this.item)),
           // con esto hacemos que no muestre el producto cuando se lo han pasado como parametro de entrada
-          filter(() => !this.item),
           map((params) => Number(params.get('id'))),
-          map((id) => this.service.loadProducts().find((i) => i.id === id))
+          switchMap((id) => this.service.loadProducts()
+            .pipe(map(productList => productList.find(product => product.id === id))))
         )
         .subscribe((item) => {
           if (item) {
+            console.log('on init', item);
             this.item = item;
-            this.cd.detectChanges(); // le decimos a angular que actualice el componente
           } else {
-            this.router.navigateByUrl('/products/all-products');
+            // this.router.navigateByUrl('/products/all-products');
           }
-        })
+        }, (error) => {})
     );
-    console.log('on init', this.item);
   }
 
   ngOnDestroy() {
-    console.log('destroy');
     this.subscriptions.filter((sub) => sub).forEach((sub) => sub.unsubscribe());
   }
 }

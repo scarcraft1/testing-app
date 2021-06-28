@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NewProductCommand } from '../../models';
@@ -7,8 +7,7 @@ import { ProductsService } from '../../services/products.service';
 @Component({
   selector: 'app-new-product',
   templateUrl: './new-product.component.html',
-  styleUrls: ['./new-product.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./new-product.component.scss']
 })
 export class NewProductComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
