@@ -7,6 +7,7 @@ import { FeaturedProductsComponent } from './routes';
 import { MenuComponent } from './routes/menu/menu.component';
 import { P404Component } from './routes/p404/p404.component';
 import { NewCommentComponent } from './routes/new-comment/new-comment.component';
+import { ReviewComponent } from './components/review/review.component';
 
 
 
@@ -17,7 +18,8 @@ import { NewCommentComponent } from './routes/new-comment/new-comment.component'
     FeaturedProductsComponent,
     MenuComponent,
     P404Component,
-    NewCommentComponent
+    NewCommentComponent,
+    ReviewComponent
   ],
   imports: [
     CoreModule,

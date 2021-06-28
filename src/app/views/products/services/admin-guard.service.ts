@@ -13,6 +13,6 @@ export class AdminGuardService implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot, state: RouterStateSnapshot
     ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.userService.isAdmin(3) || this.router.createUrlTree(['products', 'all-products']);
+    return this.userService.isAdmin(6) || this.router.createUrlTree(['products', 'all-products']);
   }
 }

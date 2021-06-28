@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NewProductCommand } from '../../models';
 import { ProductsService } from '../../services/products.service';
@@ -12,6 +12,10 @@ import { ProductsService } from '../../services/products.service';
 })
 export class NewProductComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
+
+  public get review(): FormGroup {
+    return this.form.controls['review'] as FormGroup;
+  }
 
   public command: NewProductCommand = {
     name: '',
@@ -26,8 +30,8 @@ export class NewProductComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.submitted = true;
     if (this.form.valid) {
+      console.log(this.form.value);
       this.form.reset();
-      console.log('save');
     }
   }
 
@@ -35,8 +39,18 @@ export class NewProductComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', Validators.required],
       category: ['', Validators.required],
-      price: [null, [Validators.min(0)]]
+      price: [null, [Validators.min(0)]],
+      review: this.fb.group({
+        rating: [null, [Validators.required, Validators.min(1)]],
+        comment: ['', Validators.maxLength(500)]
+      })
     });
+    this.form.setValidators((control: AbstractControl) => {
+      if (control.value.review.rating < 4) {
+        return { 'rating': 'la valoracion tiene que ser 4 o más'}
+      }
+      return null;
+    })
   }
 
   ngOnDestroy() {

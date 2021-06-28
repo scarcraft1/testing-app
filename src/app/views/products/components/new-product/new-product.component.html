@@ -1,16 +1,16 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-group">
+  <div class="form-group mb-2">
     <label for="name">Nombre</label>
     <input class="form-control" type="text" id="name" formControlName="name">
   </div>
-  <div class="form-group">
+  <div class="form-group mb-2">
     <label for="category">Categoría</label>
     <input class="form-control" type="text" id="category" formControlName="category" [ngClass]="{'is-invalid' : submitted && form.get('category')?.invalid }">
     <div class="invalid-feedback">
       {{form.get('category')?.errors | json }}
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group mb-2">
     <label for="price">Precio</label>
     <input class="form-control" type="number" id="price" formControlName="price" [ngClass]="{'is-invalid' : submitted && form.get('price')?.invalid }" >
     <div class="invalid-feedback" *ngIf="form.get('price')?.errors as errors">
@@ -29,6 +29,7 @@
   <p *ngIf="form.invalid && submitted" class="alert alert-danger">
     {{form.errors | json}}
   </p>
+  <app-review class="form-group mb-2" [form]="review" [submitted]="submitted"></app-review>
   <button type="submit" class="btn btn-primary">
     Guardar
   </button>

@@ -14,6 +14,6 @@ export class ProductChildService implements CanActivateChild {
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
     ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.userService.isLogged(5);
+    return this.userService.isLogged(6);
   }
 }
