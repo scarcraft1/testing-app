@@ -1,10 +1,16 @@
-
 <div class="input-group">
   <div class="input-group-text">
-    <img class="img-fluid" [src]="imgSrc" [alt]="imgAlt" />
+    <img class="img-fluid" [src]="imgSrc" alt="" />
   </div>
-  <input type="file" hidden #FileInput [id]="id" />
-  <label class="form-control mb-0" [for]="id">{{placeholder}}</label>
+  <input
+    type="file"
+    hidden
+    #FileInput
+    [id]="id"
+    (change)="onFileChange(FileInput.files)"
+    accept="image/*"
+  />
+  <label class="form-control mb-0" [for]="id">{{ placeholder }}</label>
   <button type="button" class="btn btn-secondary" (click)="FileInput.click()">
     🔍
   </button>
