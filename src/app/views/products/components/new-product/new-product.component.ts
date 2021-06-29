@@ -13,10 +13,6 @@ import { ProductsService } from '../../services/products.service';
 export class NewProductComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
-  public get reviews() {
-    return this.form.controls['reviews'] as FormArray;
-  }
-
   public command: NewProductCommand = {
     name: '',
     category: '',
@@ -30,19 +26,18 @@ export class NewProductComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.submitted = true;
     console.log(this.form.value);
-    console.log(this.form.controls['reviews'].valid);
+    console.log(this.form.controls['review'].valid);
     if (this.form.valid) {
       this.submitted = false;
       this.form.reset({
         name: '',
         category: '',
         price: null,
-        reviews: []
+        review: [{
+          rating: 1,
+          comment: 'Esto es un comentario nuevo'
+        }]
       });
-      this.reviews.insert(this.reviews.length, this.fb.control({
-        rating: 1,
-        comment: 'Esto es un comentario nuevo'
-      }));
     }
   }
 
@@ -51,10 +46,10 @@ export class NewProductComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       category: ['', Validators.required],
       price: [null, [Validators.min(0)]],
-      reviews: this.fb.array([{
+      review: [{
         rating: 4,
         comment: 'Esto es un comentario nuevo'
-      }])
+      }]
     });
     // this.form.controls['review'].disable();
     // this.form.setValidators((control: AbstractControl) => {

@@ -1,13 +1,24 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import {
+  Component,
+  forwardRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import {
+  AbstractControl,
   ControlValueAccessor,
   FormBuilder,
   FormGroup,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  Validators,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-review',
@@ -19,10 +30,15 @@ import { filter, tap } from 'rxjs/operators';
       useExisting: forwardRef(() => ReviewComponent),
       multi: true,
     },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => ReviewComponent),
+      multi: true,
+    },
   ],
 })
 export class ReviewComponent
-  implements OnInit, OnDestroy, ControlValueAccessor
+  implements OnInit, OnDestroy, ControlValueAccessor, Validator
 {
   private subscriptions: Subscription[] = [];
 
@@ -31,25 +47,32 @@ export class ReviewComponent
   public form!: FormGroup;
   private onChange = (val: any) => {};
   private onTouch = (val?: any) => {};
+  private onValidate: () => void = () => {};
 
   @Input()
   public submitted = false;
 
   constructor(private fb: FormBuilder) {}
 
+  @HostListener('blur')
+  private onBlur() {
+    this.onTouch();
+  }
+
   ngOnInit(): void {
     this.form = this.fb.group({
       rating: [null, [Validators.required, Validators.min(1)]],
-      comment: ['', Validators.maxLength(500)],
+      comment: ['', Validators.maxLength(5)],
     });
     this.subscriptions.push(
       this.form.valueChanges
         .pipe(
-          tap((value) => this.onTouch(value)),
-          filter(() => this.form.valid)
+          tap(() => {
+            this.onTouch();
+            this.onValidate();
+          })
         )
         .subscribe((value) => {
-          console.log('review', value);
           this.onChange(value);
         })
     );
@@ -73,5 +96,24 @@ export class ReviewComponent
 
   setDisabledState?(isDisabled: boolean) {
     this.isDisabled = isDisabled;
+  }
+
+  registerOnValidatorChange?(fn: () => void) {
+    this.onValidate = fn;
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (this.form.valid) {
+      return null;
+    }
+    return Object.entries(this.form.controls).reduce(
+      (errors, [key, control]) => {
+        if (control.errors) {
+          errors[key] = control.errors;
+        }
+        return errors;
+      },
+      this.form.errors || {}
+    );
   }
 }
