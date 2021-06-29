@@ -30,10 +30,10 @@
     {{form.errors | json}}
   </p>
   <app-review class="form-group mb-2" formControlName="review" form [submitted]="submitted"></app-review>
+  <app-image-picker id="new-file-input" formControlName="imageSrc"></app-image-picker>
   <div class="alert alert-info">
-    {{ form.controls['review'].errors | json}}
+    {{ form.value | json}}
   </div>
-  <app-image-picker id="new-file-input"></app-image-picker>
   <button type="submit" class="btn btn-primary">
     Guardar
   </button>

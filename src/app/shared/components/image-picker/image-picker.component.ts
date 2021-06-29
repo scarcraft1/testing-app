@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  forwardRef,
   HostBinding,
   Input,
   OnDestroy,
@@ -9,28 +10,48 @@ import {
 import {
   AbstractControl,
   ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { fromEvent, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { ImgFile } from 'src/app/core/types';
 @Component({
   selector: 'app-image-picker',
   templateUrl: './image-picker.component.html',
   styleUrls: ['./image-picker.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ImagePickerComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => ImagePickerComponent),
+      multi: true,
+    },
+  ],
 })
 export class ImagePickerComponent
   implements OnInit, OnDestroy, ControlValueAccessor, Validator
 {
   private subscriptions: Subscription[] = [];
-  private file?: ImgFile;
+  private get file(): ImgFile | undefined {
+    return this.image;
+  }
+  private set file(val: ImgFile | undefined) {
+    this.image = val;
+    this.cd.detectChanges();
+    console.log('this.image', this.image);
+    this.onChange(this.image);
+    this.onTouch();
+    this.onValidate();
+  }
   private fr: FileReader = new FileReader();
 
-  private fileUploaded$ = fromEvent(this.fr, 'loadend').pipe(
-    map(($event) => $event.target as FileReader),
-    map((fr) => fr.result as string)
-  );
+  private image?: ImgFile;
 
   public id: string = 'file-input';
   @HostBinding('id')
@@ -60,6 +81,23 @@ export class ImagePickerComponent
 
   public onFileChange(files: FileList | null) {
     if (files) {
+      this.fr.onloadend = () => {
+        if (this.fr.result) {
+          this.file = {
+            name: files[0].name
+              .split('.')
+              .reverse()
+              .slice(-1)
+              .reverse()
+              .join(''),
+            extension: files[0].name.split('.').reverse()[0],
+            size: files[0].size,
+            src: this.fr.result as string,
+          };
+        } else {
+          this.file = undefined;
+        }
+      };
       this.fr.readAsDataURL(files[0]);
     } else {
       this.file = undefined;
@@ -74,25 +112,14 @@ export class ImagePickerComponent
     // fr.readAsDataURL(this.file as any)
   }
 
-  ngOnInit(): void {
-    this.subscriptions.push(
-      this.fileUploaded$.subscribe((result) => {
-        this.file = {
-          extension: '',
-          name: '',
-          size: 0,
-          src: result,
-        };
-        this.cd.detectChanges();
-      })
-    );
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.subscriptions.filter((sub) => sub).forEach((sub) => sub.unsubscribe());
   }
-  writeValue(obj: ImgFile): void {
-    this.file = obj;
+
+  writeValue(obj?: ImgFile): void {
+    this.image = obj;
   }
 
   registerOnChange(fn: any): void {

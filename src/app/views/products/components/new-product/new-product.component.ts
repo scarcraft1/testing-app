@@ -1,5 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NewProductCommand } from '../../models';
 import { ProductsService } from '../../services/products.service';
@@ -8,7 +19,7 @@ import { ProductsService } from '../../services/products.service';
   selector: 'app-new-product',
   templateUrl: './new-product.component.html',
   styleUrls: ['./new-product.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewProductComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
@@ -16,12 +27,12 @@ export class NewProductComponent implements OnInit, OnDestroy {
   public command: NewProductCommand = {
     name: '',
     category: '',
-    price: 0
+    price: 0,
   };
   public submitted = false;
   public form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private service: ProductsService) { }
+  constructor(private fb: FormBuilder, private service: ProductsService) {}
 
   onSubmit() {
     this.submitted = true;
@@ -33,10 +44,13 @@ export class NewProductComponent implements OnInit, OnDestroy {
         name: '',
         category: '',
         price: null,
-        review: [{
-          rating: 1,
-          comment: 'Esto es un comentario nuevo'
-        }]
+        imageSrc: null,
+        review: [
+          {
+            rating: 1,
+            comment: 'Esto es un comentario nuevo',
+          },
+        ],
       });
     }
   }
@@ -46,11 +60,19 @@ export class NewProductComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       category: ['', Validators.required],
       price: [null, [Validators.min(0)]],
-      review: [{
-        rating: 4,
-        comment: 'Esto es un comentario nuevo'
-      }]
+      imageSrc: null,
+      review: [
+        {
+          rating: 4,
+          comment: 'Esto es un comentario nuevo',
+        },
+      ],
     });
+    this.subscriptions.push(
+      this.form.controls['imageSrc'].valueChanges.subscribe((result) =>
+        console.log('result', result)
+      )
+    );
     // this.form.controls['review'].disable();
     // this.form.setValidators((control: AbstractControl) => {
     //   if (control.value.review.rating < 4) {
@@ -61,7 +83,6 @@ export class NewProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.filter(sub => sub).forEach(sub => sub.unsubscribe());
+    this.subscriptions.filter((sub) => sub).forEach((sub) => sub.unsubscribe());
   }
-
 }
