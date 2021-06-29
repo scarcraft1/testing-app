@@ -1,10 +1,11 @@
-<div class="input-group-prepend">
+
+<div class="input-group">
   <div class="input-group-text">
-    <img class="img-fluid img-thumbnail" src="https://via.placeholder.com/150" alt="" />
+    <img class="img-fluid" [src]="imgSrc" [alt]="imgAlt" />
   </div>
+  <input type="file" hidden #FileInput [id]="id" />
+  <label class="form-control mb-0" [for]="id">{{placeholder}}</label>
+  <button type="button" class="btn btn-secondary" (click)="FileInput.click()">
+    🔍
+  </button>
 </div>
-<input type="file" hidden #FileInput id="file-input" />
-<label class="form-control mb-0">Seleccione archivo...</label>
-<button type="button" class="btn btn-secondary" (click)="FileInput.click()">
-  🔍
-</button>

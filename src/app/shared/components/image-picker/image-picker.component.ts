@@ -7,9 +7,18 @@ import { Component, HostBinding, Input, OnInit } from '@angular/core';
 })
 export class ImagePickerComponent implements OnInit {
 
-  @HostBinding('class')
-  @Input('class')
-  public className: string = 'input-group mb-2';
+  public imgSrc: string = 'https://via.placeholder.com/150';
+  public imgAlt: string = '';
+  public placeholder: string = 'Seleccione una imagen...';
+
+  @HostBinding('id')
+  @Input('id')
+  public get parentId(): string { return ''; }
+  public set parentId(id: string) {
+    this.id = id || this.id;
+  }
+
+  public id: string = 'file-input';
 
   constructor() { }
 
