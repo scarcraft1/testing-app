@@ -1,7 +1,12 @@
 :host {
   display: block;
-  margin-bottom: 1rem;
+}
+:host:disabled > .input-group {
+  cursor: not-allowed;
+}
+:host:not(:disabled) > .input-group {
+  cursor: pointer;
 }
 img {
-  max-height: 1rem;
+  max-height: 1.5em;
 }

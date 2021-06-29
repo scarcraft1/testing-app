@@ -32,7 +32,7 @@ export class NewProductComponent implements OnInit, OnDestroy {
   public submitted = false;
   public form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private service: ProductsService) {}
+  constructor(private fb: FormBuilder, private service: ProductsService) { }
 
   onSubmit() {
     this.submitted = true;
@@ -60,7 +60,7 @@ export class NewProductComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       category: ['', Validators.required],
       price: [null, [Validators.min(0)]],
-      imageSrc: null,
+      imageSrc: [null],
       review: [
         {
           rating: 4,
@@ -68,11 +68,6 @@ export class NewProductComponent implements OnInit, OnDestroy {
         },
       ],
     });
-    this.subscriptions.push(
-      this.form.controls['imageSrc'].valueChanges.subscribe((result) =>
-        console.log('result', result)
-      )
-    );
     // this.form.controls['review'].disable();
     // this.form.setValidators((control: AbstractControl) => {
     //   if (control.value.review.rating < 4) {

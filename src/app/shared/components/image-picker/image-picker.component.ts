@@ -1,11 +1,14 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   forwardRef,
   HostBinding,
   Input,
   OnDestroy,
   OnInit,
+  ViewChild
 } from '@angular/core';
 import {
   AbstractControl,
@@ -13,9 +16,10 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
-  Validator,
+  Validator
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { fromEvent, Subject } from 'rxjs';
+import { filter, map, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { ImgFile } from 'src/app/core/types';
 @Component({
   selector: 'app-image-picker',
@@ -35,23 +39,14 @@ import { ImgFile } from 'src/app/core/types';
   ],
 })
 export class ImagePickerComponent
-  implements OnInit, OnDestroy, ControlValueAccessor, Validator
-{
-  private subscriptions: Subscription[] = [];
-  private get file(): ImgFile | undefined {
-    return this.image;
-  }
-  private set file(val: ImgFile | undefined) {
-    this.image = val;
-    this.cd.detectChanges();
-    console.log('this.image', this.image);
-    this.onChange(this.image);
-    this.onTouch();
-    this.onValidate();
-  }
-  private fr: FileReader = new FileReader();
+  implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
 
-  private image?: ImgFile;
+  private destroy$ = new Subject<boolean>();
+  private fr: FileReader = new FileReader();
+  private file?: ImgFile;
+
+  @ViewChild('FileInput')
+  private fileInput?: ElementRef<HTMLInputElement>;
 
   public id: string = 'file-input';
   @HostBinding('id')
@@ -63,63 +58,65 @@ export class ImagePickerComponent
     this.id = id || this.id;
   }
 
-  public isDisabled = false;
-  public onChange: (val?: any) => any = (val?: any) => {};
-  public onTouch: (val?: any) => any = (val?: any) => {};
-  public onValidate: () => void = () => {};
+  @Input()
+  public maxSize: number = 20;
+  @Input()
+  public maxNameLength: number = 100;
 
   public get imgSrc(): string {
     return this.file?.src || 'https://via.placeholder.com/150';
   }
   public get placeholder(): string {
-    return this.file
-      ? `${this.file.name}.${this.file.extension}`
-      : 'Seleccione una imagen...';
+    return this.file?.name || 'Seleccione una imagen...';
   }
 
-  constructor(private cd: ChangeDetectorRef) {}
+  @HostBinding('attr.disabled')
+  public isDisabled = false;
 
-  public onFileChange(files: FileList | null) {
-    if (files) {
-      this.fr.onloadend = () => {
-        if (this.fr.result) {
-          this.file = {
-            name: files[0].name
-              .split('.')
-              .reverse()
-              .slice(-1)
-              .reverse()
-              .join(''),
-            extension: files[0].name.split('.').reverse()[0],
-            size: files[0].size,
-            src: this.fr.result as string,
-          };
-        } else {
-          this.file = undefined;
-        }
-      };
-      this.fr.readAsDataURL(files[0]);
-    } else {
-      this.file = undefined;
+  public onChange: (val?: any) => any = () => { };
+  public onTouch: (val?: any) => any = () => { };
+  public onValidate: () => void = () => { };
+
+  constructor(private cd: ChangeDetectorRef) { }
+
+  ngOnInit(): void { }
+
+  ngAfterViewInit() {
+    if (this.fileInput) {
+      const fileChange$ = fromEvent(this.fileInput?.nativeElement, 'change').pipe(
+        filter(() => !this.isDisabled),
+        map($event => ($event.target as HTMLInputElement).files?.[0]),
+        tap(file => { if (file) { this.fr.readAsDataURL(file); } else { this.file = undefined } }),
+        takeUntil(this.destroy$),
+      );
+      const fileReaded$ = fromEvent(this.fr, 'loadend').pipe(
+        map($event => ($event.target as FileReader).result as string),
+        withLatestFrom(fileChange$),
+        takeUntil(this.destroy$),
+        map(([content, metadata]) => !metadata ? undefined : <ImgFile>{
+          type: metadata?.type,
+          name: metadata?.name,
+          size: metadata?.size,
+          src: content
+        })
+      );
+      fileReaded$.subscribe(image => {
+        this.file = image;
+        this.onChange(this.file);
+        this.onTouch();
+        this.onValidate();
+        this.cd.markForCheck();
+      });
     }
-    // this.file = files?.[0];
-    // const fr = new FileReader();
-    // fr.onloadend = ($event) => {
-    //   this.imgSrc = fr.result as string;
-    //   console.log('img', this.imgSrc);
-    //   this.cd.detectChanges();
-    // }
-    // fr.readAsDataURL(this.file as any)
   }
-
-  ngOnInit(): void {}
 
   ngOnDestroy(): void {
-    this.subscriptions.filter((sub) => sub).forEach((sub) => sub.unsubscribe());
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   writeValue(obj?: ImgFile): void {
-    this.image = obj;
+    this.file = obj;
   }
 
   registerOnChange(fn: any): void {
@@ -139,7 +136,18 @@ export class ImagePickerComponent
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
-    console.log(control.value);
-    return null;
+    if (!control.value) { return null; }
+    let errors: ValidationErrors | null = null;
+    if (!(control.value as ImgFile).type.startsWith('image')) {
+      errors = Object.assign(errors || {}, { invalidType: { type: (control.value as ImgFile).type, accept: 'image/*' } });
+    }
+    if (Number(((control.value as ImgFile).size / 1024 / 1024).toFixed(4)) > this.maxSize) {
+      errors = Object.assign(errors || {}, { invalidSize: { size: (control.value as ImgFile).size, maxSize: this.maxSize } });
+    }
+    if ((control.value as ImgFile).name.length > this.maxNameLength) {
+      errors = Object.assign(errors || {}, { invalidNameLength: { nameLength: (control.value as ImgFile).name.length, maxNameLength: this.maxNameLength } });
+    }
+
+    return errors;
   }
 }

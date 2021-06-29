@@ -3,6 +3,6 @@
 export interface ImgFile {
   src: string;
   name: string;
-  extension: string;
+  type: string;
   size: number;
 }

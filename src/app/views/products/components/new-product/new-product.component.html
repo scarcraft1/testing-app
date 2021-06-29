@@ -5,14 +5,16 @@
   </div>
   <div class="form-group mb-2">
     <label for="category">Categoría</label>
-    <input class="form-control" type="text" id="category" formControlName="category" [ngClass]="{'is-invalid' : submitted && form.get('category')?.invalid }">
+    <input class="form-control" type="text" id="category" formControlName="category"
+      [ngClass]="{'is-invalid' : submitted && form.get('category')?.invalid }">
     <div class="invalid-feedback">
       {{form.get('category')?.errors | json }}
     </div>
   </div>
   <div class="form-group mb-2">
     <label for="price">Precio</label>
-    <input class="form-control" type="number" id="price" formControlName="price" [ngClass]="{'is-invalid' : submitted && form.get('price')?.invalid }" >
+    <input class="form-control" type="number" id="price" formControlName="price"
+      [ngClass]="{'is-invalid' : submitted && form.get('price')?.invalid }">
     <div class="invalid-feedback" *ngIf="form.get('price')?.errors as errors">
       <div *ngIf="errors.required">
         Debe introducir un precio
@@ -30,10 +32,14 @@
     {{form.errors | json}}
   </p>
   <app-review class="form-group mb-2" formControlName="review" form [submitted]="submitted"></app-review>
-  <app-image-picker id="new-file-input" formControlName="imageSrc"></app-image-picker>
-  <div class="alert alert-info">
-    {{ form.value | json}}
+  <app-image-picker id="new-file-input" formControlName="imageSrc"
+    [ngClass]="{ 'is-invalid' : form.controls.imageSrc?.invalid }"></app-image-picker>
+  <div class="invalid-feedback" *ngIf="form.controls.imageSrc?.invalid">
+    {{form.controls.imageSrc?.errors | json}}
   </div>
+  <!-- <div class="alert alert-info" *ngIf="form.controls.imageSrc?.valueChanges | async as image">
+    <img class="img-fluid img-thumbnail" alt="" [src]="image.src">
+  </div> -->
   <button type="submit" class="btn btn-primary">
     Guardar
   </button>
