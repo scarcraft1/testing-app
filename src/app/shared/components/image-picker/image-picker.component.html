@@ -1,10 +1,29 @@
-<div class="input-group">
+<div class="input-group" [ngClass]="{ 'is-invalid': isInvalid }">
   <div class="input-group-text">
     <img class="img-fluid" [src]="imgSrc" alt="" />
   </div>
-  <input type="file" hidden #FileInput [id]="id" accept="image/*" [disabled]="isDisabled" />
-  <label class="form-control mb-0" [for]="id">{{ placeholder }}</label>
-  <button type="button" class="btn btn-secondary" (click)="FileInput.click()" [disabled]="isDisabled">
+  <input
+    type="file"
+    hidden
+    #FileInput
+    [id]="id"
+    accept="image/*"
+    [disabled]="isDisabled"
+  />
+  <label
+    class="form-control mb-0"
+    [for]="id"
+    [ngClass]="{ 'is-invalid': isInvalid }"
+  >
+    {{ placeholder }}
+  </label>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    (click)="FileInput.click()"
+    [disabled]="isDisabled"
+  >
     🔍
   </button>
 </div>
+<ng-content select=".invalid-feedback"></ng-content>

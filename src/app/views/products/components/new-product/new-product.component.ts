@@ -2,14 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import {
-  AbstractControl,
-  FormArray,
   FormBuilder,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NewProductCommand } from '../../models';
@@ -19,7 +17,7 @@ import { ProductsService } from '../../services/products.service';
   selector: 'app-new-product',
   templateUrl: './new-product.component.html',
   styleUrls: ['./new-product.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewProductComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
@@ -32,7 +30,7 @@ export class NewProductComponent implements OnInit, OnDestroy {
   public submitted = false;
   public form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private service: ProductsService) { }
+  constructor(private fb: FormBuilder, private service: ProductsService) {}
 
   onSubmit() {
     this.submitted = true;
@@ -68,13 +66,6 @@ export class NewProductComponent implements OnInit, OnDestroy {
         },
       ],
     });
-    // this.form.controls['review'].disable();
-    // this.form.setValidators((control: AbstractControl) => {
-    //   if (control.value.review.rating < 4) {
-    //     return { 'rating': 'la valoracion tiene que ser 4 o más'}
-    //   }
-    //   return null;
-    // })
   }
 
   ngOnDestroy() {
