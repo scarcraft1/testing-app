@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ReviewComponent } from '../review/review.component';
 
 import { NewProductComponent } from './new-product.component';
 
@@ -8,7 +11,14 @@ describe('NewProductComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NewProductComponent ]
+      declarations: [
+        NewProductComponent,
+        ReviewComponent
+       ],
+      imports: [
+        ReactiveFormsModule,
+        SharedModule
+      ]
     })
     .compileComponents();
   });

@@ -9,5 +9,6 @@ export class AppComponent implements OnInit {
   public title = 'testing-app 2';
 
   ngOnInit(): void {
+    this.title = 'hola';
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
   templateUrl: './head-bar.component.html',
   styleUrls: ['./head-bar.component.scss']
 })
-export class HeadBarComponent implements OnInit {
+export class HeadBarComponent implements OnInit, OnChanges {
   public submitted = false
 
   @Input() Titulo = 'titulo';
@@ -20,6 +20,13 @@ export class HeadBarComponent implements OnInit {
   public form!: FormGroup;
 
   constructor(private fb: FormBuilder) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes.Titulo.currentValue);
+    if (this.form) {
+      this.form.setValue({ search: changes.Titulo.currentValue });
+    }
+  }
 
   public isValid(control: AbstractControl) {
     if (!this.submitted) { return ''; }
